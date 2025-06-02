@@ -150,7 +150,7 @@ $(document).ready(() => {
         ],
 
 
-        order: [[0, 'asc']],
+        order: [[0, 'desc']],
         responsive: true,
         dom:
             '<"row"' +
