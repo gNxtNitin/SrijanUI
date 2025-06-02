@@ -18,7 +18,7 @@ namespace SRIJANWEBUI.Middleware
             {
                 await _next(context);
             }
-            catch (UnauthorizedApiException)
+            catch (UnauthorizedApiException ex)
             {
 
                 context.Session.Clear();

@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_BlankLayout";
+    Layout = "_LandingPageLayout";
     ViewBag.Title = "Login";
 }
 @model AdminLogin;
@@ -7,16 +7,7 @@
 @section PageStyles {
     <link rel="stylesheet" href="~/app-assets/vendor/css/pages/page-auth.css">
 
-    <style>
-        .bg-cover-custom {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            filter: blur(1px) brightness(0.8);
-            opacity: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/landing-page-layout.css">
 
 }
 
@@ -28,40 +19,17 @@
 
 }
 
-<div class="position-relative overflow-hidden min-vh-100">
-
-    <!-- Background Image -->
-    <div class="position-absolute top-0 start-0 w-100 h-100 bg-cover-custom"
-         style="background-image: url('@Url.Content("~/static/authpage_bg.jpg")'); z-index: 0;">
-    </div>
-
-    <div class="position-relative d-flex justify-content-center align-items-center min-vh-100" style="z-index: 1;">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-6">
-                <!-- Login -->
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Logo -->
-                        <div class="app-brand justify-content-center">
-                            <a href="/" class="app-brand-link">
-                                <span class="app-brand-logo demo">
-
-                                    <img src="~/static/logo.png" alt="SRIJAN Logo" class="img-fluid img-thumbnail" style="max-width: 150px; max-height: 80px;">
-                                </span>
-                                @*  <span class="app-brand-text demo text-heading fw-bold">SRIJAN</span> *@
-                            </a>
-                        </div>
-                        <!-- Logo -->
-                        <h4 class="mb-1">Admin Portal</h4>
-                        <p class="mb-6">Please sign-in to your account</p>
-
-                        <form id="loginForm" class="mb-4" asp-asp-controller="Auth" asp-action="LoginAdmin" method="POST" asp-antiforgery="true">
-                            <div class="mb-6">
-                                <label for="EmailId" class="form-label">Email ID</label>
-                                <input type="text" class="form-control" id="emailOrPhone" name="EmailId" asp-for="EmailId" placeholder="Enter your Cutomer ID" autofocus>
-                                <span asp-validation-for="EmailId" class="text-danger"></span>
+        <div class="login-box d-none">
+            <h3>Mobile Admin Portal</h3>
+            <p class="text-center">Please sign-in to your account</p>
+    
+                    <form id="loginForm" class="mb-4" asp-asp-controller="Auth" asp-action="LoginAdmin" method="POST" asp-antiforgery="true">
+                            <div class="mb-0">
+                                <label for="EmpId" class="form-label">Customer ID</label>
+                            <input type="text" class="form-control" id="EmpId" name="EmpId" asp-for="EmpId" placeholder="Enter your Employee ID" autofocus>
+                            <span asp-validation-for="EmpId" class="text-danger"></span>
                             </div>
-                            <div class="mb-6 form-password-toggle">
+                            <div class="mb-0 form-password-toggle">
                                 <label class="form-label" for="password">Password</label>
                                 <div class="input-group input-group-merge">
                                     <input type="password" id="password" class="form-control" name="password" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
@@ -69,11 +37,18 @@
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                             </div>
-                            
 
-                            <div class="mb-6 captcha-container">
-                                <!-- dynamic captcha rendering -->
+                            <div class="my-0">
+                                <div class="d-flex justify-content-between">
+                                    <a asp-asp-controller="Auth" asp-action="ForgotPassword" asp-controller="Auth">
+                                        <p class="mb-0">Forgot Password?</p>
+                                    </a>
+                                </div>
                             </div>
+
+                          @*   <div class="mb-6 captcha-container">
+                                <!-- dynamic captcha rendering -->
+                            </div> *@
 
                             @* <div class="my-8">
                             <div class="d-flex justify-content-between">
@@ -88,24 +63,11 @@
                                 </a>
                             </div>
                         </div> *@
-                            <div class="mb-6">
+                            <div class="mb-0 mt-2">
                                 <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
                             </div>
-                        </form>
-
-                        @* <p class="text-center">
-                        <span>New on our platform?</span>
-                        <a asp-action="Register" asp-controller="Auth">
-                            <span>Create an account</span>
-                        </a>
-                    </p> *@
-                    </div>
-                </div>
-                <!-- Register -->
-            </div>
+                    </form>
         </div>
-    </div>
-</div>
 
 <script>
 
@@ -119,20 +81,42 @@
 
         });
 
+        const lg = $(".login-box");
+
         const errm1 = '@ViewData["LoginErrorMessage"]';
-        if(errm1.trim() !== '') ToastWrapper.error(errm1);
+        if(errm1.trim() !== ''){
+            ToastWrapper.error(errm1);
+            if(lg.hasClass("d-none"))
+                lg.removeClass("d-none").addClass("d-block");
+        }
 
         const errm2 = '@TempData["ForgotPasswordRequestError"]';
-        if(errm2.trim() !== '') ToastWrapper.error(errm2);
+        if(errm2.trim() !== '') {
+            ToastWrapper.error(errm2);
+            if(lg.hasClass("d-none"))
+                lg.removeClass("d-none");
+        }
 
         const errm3 = '@TempData["OTPValidationError"]';
-        if(errm3.trim() !== '') ToastWrapper.error(errm3);
+        if(errm3.trim() !== '') {
+            ToastWrapper.error(errm3);
+            if(lg.hasClass("d-none"))
+                lg.removeClass("d-none");
+        }
 
         const errm4 = '@TempData["ResetPasswordSuccessMessage"]';
-        if(errm4.trim() !== '') ToastWrapper.success(errm4);
+        if(errm4.trim() !== '') {
+            ToastWrapper.success(errm4);
+            if(lg.hasClass("d-none"))
+                lg.removeClass("d-none");
+        }
 
         const errm5 = '@TempData["ResetPasswordErrorMessage"]';
-        if(errm5.trim() !== '') ToastWrapper.error(errm5);
+        if(errm5.trim() !== ''){
+            ToastWrapper.error(errm5);
+            if(lg.hasClass("d-none"))
+                lg.removeClass("d-none");
+        }
 
 
         $('.form-password-toggle i').click(function (e) {

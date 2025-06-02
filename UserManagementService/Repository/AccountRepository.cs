@@ -96,7 +96,7 @@ namespace UserManagementService.Repository
                     token = doc.RootElement.GetProperty("token").GetString();
                     userId = doc.RootElement.GetProperty("userId").GetString();
                     companyName = doc.RootElement.GetProperty("companyname").GetString();
-                    uname = doc.RootElement.GetProperty("name").GetString();
+                    uname = doc.RootElement.GetProperty("uName").GetString();
                     role = doc.RootElement.GetProperty("role").GetString();
                 }
 
@@ -275,7 +275,7 @@ namespace UserManagementService.Repository
             bool isResetSuccessfull = false;
             LoginRequest loginRequestModel = new LoginRequest()
             {
-                MobileOrEmail = string.Empty,
+                MobileOrEmail = userId,
                 Password = password,
                 IsJwtToken = false,
                 IsLoginWithOtp = false,
@@ -294,8 +294,10 @@ namespace UserManagementService.Repository
             return isResetSuccessfull;
         }
 
-        public async Task<bool> SendForgotPasswordEmail(string email)
+        public async Task<EmailStatus> SendForgotPasswordEmail(string email)
         {
+            EmailStatus emailStatus = new EmailStatus();
+
             LoginRequest loginRequestModel = new LoginRequest
             {
                 MobileOrEmail = email,
@@ -309,54 +311,98 @@ namespace UserManagementService.Repository
 
             APIResponse respBody = await _apiClientHelper.PostAsync<LoginRequest, APIResponse>("/api/PasswordManagement/ForgotPassword", loginRequestModel);
 
-            if (respBody.Code > 0)
+            emailStatus.Status = respBody.Code;
+            if (emailStatus.Status > 0)
             {
-                return true;
+                emailStatus.SentOnAddress = MaskEmail(respBody.Data.ToString());
             }
 
-            return false;
+            return emailStatus;
+            
+            
+        }
+
+        private string MaskEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                return email;
+
+            var parts = email.Split('@');
+            if (parts.Length != 2)
+                return email; // Invalid format, return as-is
+
+            string userId = parts[0];
+            string domain = parts[1];
+            int length = userId.Length;
+
+            if (length <= 2)
+            {
+                // Too short to reveal anything, mask all
+                return $"****@{domain}";
+            }
+
+            string prefix, suffix;
+
+            if (length <= 6)
+            {
+                // Show 1 letter at start and end
+                prefix = userId.Substring(0, 1);
+                suffix = userId.Substring(length - 1, 1);
+            }
+            else
+            {
+                // Show 1-2 at start, 1-2 at end
+                int prefixLen = Math.Min(2, length / 2);
+                int suffixLen = Math.Min(2, length - prefixLen - 1);
+                prefix = userId.Substring(0, prefixLen);
+                suffix = userId.Substring(length - suffixLen, suffixLen);
+            }
+
+            string maskedMiddle = new string('*', length - prefix.Length - suffix.Length);
+            return $"{prefix}{maskedMiddle}{suffix}@{domain}";
         }
 
         public async Task<bool> UpdatePassword(string userId, string password)
         {
-            APIResponse resp = await _apiClientHelper.GetAsync<APIResponse>($"/api/Account/GetUser?userId={userId}");
+            //APIResponse resp = await _apiClientHelper.GetAsync<APIResponse>($"/api/Account/GetUser?userId={userId}");
             bool isResetSuccessfull = false;
 
 
-            if (resp.Code > 0)
+            //if (resp.Code > 0)
+            //{
+            //var jsonData = JsonSerializer.Deserialize<JsonElement>(resp.Data.ToString());
+
+            //if (jsonData.TryGetProperty("Users", out var usersJson) && usersJson.GetArrayLength() > 0)
+            //{
+            //    var userInfo = JsonSerializer.Deserialize<AddUpdateUserRequest>(usersJson[0].GetRawText());
+
+            LoginRequest pwUpdateReq = new LoginRequest()
             {
-                var jsonData = JsonSerializer.Deserialize<JsonElement>(resp.Data.ToString());
-
-                if (jsonData.TryGetProperty("Users", out var usersJson) && usersJson.GetArrayLength() > 0)
-                {
-                    var userInfo = JsonSerializer.Deserialize<AddUpdateUserRequest>(usersJson[0].GetRawText());
-
-                    LoginRequest pwUpdateReq = new LoginRequest()
-                    {
-                        MobileOrEmail = userInfo.Email,
-                        Password = password,
-                        IsJwtToken = false,
-                        IsLoginWithOtp = false,
-                        IsResendCode = 0,
-                        UserId = string.Empty,
-                        VerificationCode = string.Empty
-                    };
+                MobileOrEmail = userId,
+                Password = password,
+                IsJwtToken = false,
+                IsLoginWithOtp = false,
+                IsResendCode = 0,
+                UserId = userId,
+                VerificationCode = string.Empty
+            };
 
 
 
-                    APIResponse respBody = await _apiClientHelper.PostAsync<LoginRequest, APIResponse>("api/PasswordManagement/ResetPassword", pwUpdateReq);
+            APIResponse respBody = await _apiClientHelper.PostAsync<LoginRequest, APIResponse>("api/PasswordManagement/ResetPassword", pwUpdateReq);
 
-                    if (respBody.Code > 0)
-                    {
-                        isResetSuccessfull = true;
-                    }
-
-
-                }
+            if (respBody.Code > 0)
+            {
+                isResetSuccessfull = true;
             }
+
+
+            //}
+            //}
 
             return isResetSuccessfull;
         }
+
 
         public async Task<string> GetRoleByUserId(string userId)
         {

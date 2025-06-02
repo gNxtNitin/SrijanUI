@@ -1,4 +1,8 @@
-﻿<!doctype html>
+﻿@{
+    var pageTitle = ViewBag?.Title ?? "SRIJAN Web Portal";
+}
+
+<!doctype html>
 
 <html lang="en" class="light-style layout-navbar-fixed layout-wide" dir="ltr" data-theme="theme-default"
       data-assets-path="/app-assets/" data-template="front-pages" data-style="light">
@@ -8,7 +12,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>SRIJAN Web Potal</title>
+    <title>@pageTitle</title>
 
     <meta name="description" content="" />
 
@@ -16,31 +20,44 @@
     <link rel="icon" type="image/x-icon" href="~/static/favicon.ico" />
 
     <!-- Fonts -->
+    <!-- CORE styles -->
+    <!-- Fonts & Flag icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
           rel="stylesheet" />
 
+    <link rel="stylesheet" href="~/app-assets/vendor/fonts/fontawesome.css" />
     <link rel="stylesheet" href="~/app-assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/fonts/flag-icons.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/fonts/tabler-icons.css" asp-append-version="true" />
 
     <!-- Core CSS -->
+    <link rel="stylesheet" href="~/app-assets/vendor/css/core.css" class="template-customizer-core-css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app-assets/vendor/css/theme-default.css" class="template-customizer-theme-css" asp-append-version="true" />
 
-    <link rel="stylesheet" href="~/app-assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="~/app-assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/libs/node-waves/node-waves.css" asp-append-version="true" />
 
-    <link rel="stylesheet" href="~/app-assets/css/demo.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/libs/&#64;form-validation/form-validation.css" />
 
-    <link rel="stylesheet" href="~/app-assets/vendor/css/pages/front-page.css" />
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="~/app-assets/vendor/libs/node-waves/node-waves.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/libs/toastr/toastr.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/libs/animate-css/animate.css" />
+    <link rel="stylesheet" href="~/app-assets/vendor/libs/spinkit/spinkit.css" />
 
-    <link rel="stylesheet" href="~/app-assets/vendor/libs/nouislider/nouislider.css" />
-    <link rel="stylesheet" href="~/app-assets/vendor/libs/swiper/swiper.css" />
+
+    <script src="~/app-assets/vendor/libs/jquery/jquery.js"></script>
+
+    <script src="~/app-assets/vendor/libs/toastr/toastr.js"></script>
+    <script src="~/js/toastmessage.js"></script>
+
+    <!-- Application stylesheets -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <!-- Page CSS -->
+  
 
-    <link rel="stylesheet" href="~/app-assets/vendor/css/pages/front-page-landing.css" />
 
+    <script src="~/app-assets/vendor/libs/jquery/jquery.js"></script>
     <!-- Helpers -->
     <script src="~/app-assets/vendor/js/helpers.js"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
@@ -49,28 +66,71 @@
 
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="~/app-assets/js/front-config.js"></script>
+
+    @RenderSection("PageStyles", required: false)
 </head>
 
-<body>
-    <script src="~/app-assets/vendor/js/dropdown-hover.js"></script>
-    <script src="~/app-assets/vendor/js/mega-dropdown.js"></script>
+<body style="height: 100vh">
 
-   
-    <!-- Content:Start --> 
-    @RenderBody()
-     <!-- Content:End -->
-   
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <script src="~/app-assets/vendor/libs/popper/popper.js"></script>
-    <script src="~/app-assets/vendor/js/bootstrap.js"></script>
+        <header class="navbar">
+            <div class="logo">
+                <a href="/" class="app-brand-link">
+                    <img src="~/static/logo1.png" alt="Srijan Publishers Logo" />
+                    @* <span>SRIJAN PUBLISHERS P. LTD.</span> *@
+                </a>
+            </div>
+
+            <div class="contact">
+                <span>📧 headoffice@srijanpublishers.com</span>
+                <span>📞 +11 42161600</span>
+                <button class="top-login-btn">Login</button>
+            </div>
+        </header>
+
+        <main class="login-section">
+            <!-- Content:Start -->
+            @RenderBody()
+            <!-- Content:End -->
+        </main>
+
+        <footer>
+            <p>© 2025 All Rights Reserved By Srijan</p>
+        </footer>
+
+
+    <script src="~/app-assets/vendor/libs/popper/popper.js" asp-append-version="true"></script>
+    <script src="~/app-assets/vendor/js/bootstrap.js" asp-append-version="true"></script>
     <script src="~/app-assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="~/app-assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/app-assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="~/app-assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="~/app-assets/vendor/libs/typeahead-js/typeahead.js"></script>
 
-    <!-- endbuild -->
-    <!-- Vendors JS -->
-    <script src="~/app-assets/vendor/libs/nouislider/nouislider.js"></script>
-    <script src="~/app-assets/vendor/libs/swiper/swiper.js"></script>
+    <script src="~/app-assets/vendor/libs/cleavejs/cleave.js"></script>
 
+    <script src="~/app-assets/vendor/libs/&#64;form-validation/popular.js"></script>
+    <script src="~/app-assets/vendor/libs/&#64;form-validation/bootstrap5.js"></script>
+    <script src="~/app-assets/vendor/libs/&#64;form-validation/auto-focus.js"></script>
+    <script src="~/app-assets/vendor/libs/block-ui/block-ui.js"></script>
+
+    <!-- Page JS -->
+    @RenderSection("PageScripts", required: false)
+
+    <script>
+        $(document).ready(()=>{
+            
+            $(".top-login-btn").on("click", ()=>{
+                const lgBox =  $(".login-box")
+                if(lgBox.hasClass('d-none')){
+                    lgBox.removeClass("d-none");
+                    lgBox.addClass("d-block");
+                    //lgBox.removeClass("animate__fadeIn");
+                }
+                               
+            });
+        });
+    </script>
+   
 </body>
 
 </html>

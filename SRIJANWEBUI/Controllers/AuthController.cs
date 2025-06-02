@@ -125,7 +125,7 @@ namespace SRIJANWEBUI.Controllers
                 //var kk = PasswordConfig.GetMd5Hash(userLogin.Password);
                 LoginRequest loginRequest = new LoginRequest()
                 {
-                    MobileOrEmail = userLogin.EmailId,
+                    MobileOrEmail = userLogin.EmpId,
                     CompanyCode = 0,
                     UserId = string.Empty,
                     Password = userLogin.Password,
@@ -366,10 +366,91 @@ namespace SRIJANWEBUI.Controllers
 
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> ResetPassword(string? authResetToken)
+        {
+            if (string.IsNullOrEmpty(authResetToken))
+            {
+                TempData["ForgotPasswordRequestError"] = "Reset Password Url Is Invalid/Expired";
+                RedirectToAction("LoginAdmin");
+            }
+
+
+            (bool isRequestValid, string userId) = await _accountRepository.ResetPasswordUrlValidate(authResetToken);
+
+            if (isRequestValid && !string.IsNullOrEmpty(userId))
+            {
+                return View(new ResetPasswordViewModel { UserId = EncDecHelper.Encrypt(userId) });
+            }
+
+            //toast message on login page
+            TempData["ForgotPasswordRequestError"] = "Reset Password Url Is Invalid/Expired";
+            return RedirectToAction("LoginAdmin");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetUserPasswordData)
+        {
+            resetUserPasswordData.UserId = EncDecHelper.Decrypt(resetUserPasswordData.UserId);
+            bool isResetSuccess = await _accountRepository.ResetPassword(resetUserPasswordData.UserId, resetUserPasswordData.Password);
+            if (isResetSuccess)
+            {
+                TempData["ResetPasswordSuccessMessage"] = "Password updated Successfully!";
+                return RedirectToAction("LoginAdmin");
+            }
+
+
+            TempData["ResetPasswordErrorMessage"] = "Failed to reset password!";
+            return RedirectToAction("Login");
+        }
+        public IActionResult ForgotPassword()
         {
             return View();
         }
+        public IActionResult ChangePassword()
+        {
+            ViewBag.ErCode = TempData["CPasswordCode"] as string;
+            ViewBag.ErMsg = TempData["CPasswordMsg"] as string;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(string userId, string password)
+        {
+            bool res = await _accountRepository.UpdatePassword(userId, password);
+            if (res)
+            {
+                TempData["CPasswordCode"] = "1";
+                TempData["CPasswordMsg"] = "Password updated Successfully!";
+            }
+            else
+            {
+                TempData["CPasswordCode"] = "0";
+                TempData["CPasswordMsg"] = "Password update failed";
+            }
+
+
+            return RedirectToAction("ChangePassword");
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email.Trim()))
+            {
+                return new JsonResult(new { Status = -400 });
+            }
+
+            EmailStatus emailSentStatus = await _accountRepository.SendForgotPasswordEmail(email);
+
+
+            return new JsonResult(emailSentStatus);
+        }
+
+
+
+
         public async Task<IActionResult> Logout()
         {
 
@@ -391,6 +472,9 @@ namespace SRIJANWEBUI.Controllers
         {
             return View();
         }
+
+
+       
 
     }
 }

@@ -24,10 +24,8 @@ namespace UserManagementService.Utility.APIHelper
             {
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
-
+           
             return await base.SendAsync(request, cancellationToken);
-
-            
         }
     }
 
