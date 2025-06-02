@@ -131,6 +131,11 @@ namespace SRIJANWEBUI.Controllers
 
                 float kmV = await _reportRepository.GetKMValueByDateRange(empId, fromDate, toDate);
 
+                if(kmV < 0)
+                {
+                    return Json(new { Status = -1, Message = "Failed to Upload DA Request" });
+                }
+
                 uploadDAViewModel.EmpId = empId;
                 DAUploadModel daReq = new DAUploadModel()
                 {

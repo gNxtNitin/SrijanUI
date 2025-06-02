@@ -4,16 +4,17 @@ namespace SRIJANWEBUI.Models
 {
     public class UserLogin
     {
-        [Required]
+        [Required(ErrorMessage = "Please Enter Your Customer Id")]
         public string CustomerId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Please Enter Your Password")]
         public string Password { get; set; }
-        [Required]
+        
+        [Required(ErrorMessage = "Company Code is required")]
         public int CompanyCode { get; set; }
 
-        public string CaptchaKey { get; set; } = string.Empty;
+        //public string CaptchaKey { get; set; } = string.Empty;
 
-        public bool IsRememberMe { get; set; }
+        //public bool IsRememberMe { get; set; }
     }
 }

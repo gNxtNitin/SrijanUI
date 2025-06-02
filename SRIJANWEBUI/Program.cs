@@ -52,8 +52,10 @@ app.UseSession();
 app.UseCookiePolicy();
 app.UseAuthentication();
 
-app.UseAuthorization();
 app.UseMiddleware<UnauthorizedAPIAccessMiddleware>();
+
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

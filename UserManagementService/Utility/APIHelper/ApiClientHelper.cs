@@ -55,7 +55,6 @@ namespace UserManagementService.Utility.APIHelper
                 // If the response status is Unauthorized (401)
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-
                     throw new UnauthorizedApiException("User is not authorized. Token might be expired.");
                 }
 
@@ -108,8 +107,8 @@ namespace UserManagementService.Utility.APIHelper
         {
             AddCustomHeaders(customHeaders);
             var response = await _httpClient.DeleteAsync(endpoint);
-            response.EnsureSuccessStatusCode();
-            return response.IsSuccessStatusCode;
+           
+            return await ReadResponseJsonAsync<bool>(response);
         }
 
         // Helper: Add custom headers (e.g., API keys, trace IDs)
