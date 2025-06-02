@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Authorization;
 //using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using SRIJANWEBUI.Models;
+using SRIJANWEBUI.Utility;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using UserManagementService.IRepository;
 using UserManagementService.Models;
 using UserManagementService.Repository;
-using SRIJANWEBUI.Models;
-using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
-using SRIJANWEBUI.Utility;
 
 namespace SRIJANWEBUI.Controllers
 {
@@ -20,7 +21,14 @@ namespace SRIJANWEBUI.Controllers
         {
             _adminPortalRepository = adminPortalRepository;
         }
+        public bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
 
+            string pattern = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]).{8,}$";
+            return Regex.IsMatch(password, pattern);
+        }
         public IActionResult Dashboard()
         {
             return View();
@@ -176,6 +184,13 @@ namespace SRIJANWEBUI.Controllers
             {
                 // Optionally return specific validation errors
                 return new JsonResult(new { code = -1, message = "Invalid Inputs." });
+            }
+            if (sr1.flag == "P")
+            {
+                if (string.IsNullOrEmpty(sr1.Password) || !IsValidPassword(sr1.Password))
+                {
+                    return new JsonResult(new { code = -1, message = "Invalid Password. Password must be at least 8 characters long and contain at least one letter, one number, and one special character." });
+                }
             }
             EmployeeRequestModel req = new EmployeeRequestModel
             {
