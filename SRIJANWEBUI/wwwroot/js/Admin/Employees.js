@@ -258,20 +258,27 @@ $(document).ready(function () {
                 
                 $('#designation').val(data.designation);
                 // Select Inputs
-                $('#zone option').each(function () {
-                    if ($(this).text().trim().toLowerCase() === data.department.trim().toLowerCase()) {
-                        $(this).prop('selected', true);
-                        return false; // break the loop
-                    }
-                }); // Assuming 'department' is zone
+                if (data.department != null) {
+                    $('#zone option').each(function () {
+                        if ($(this).text().trim().toLowerCase() === data.department.trim().toLowerCase()) {
+                            $(this).prop('selected', true);
+                            return false; // break the loop
+                        }
+                    }); // Assuming 'department' is zone
+                }
+                
                 $('#role').val(data.user_role_id);
-                $('#manager option').each(function () {
-                    if ($(this).text().trim().toLowerCase() === data.account_manager.trim().toLowerCase()) {
-                        $(this).prop('selected', true);
-                        return false; // break the loop
-                    }
-                });
-                $('#manager').trigger('change');
+
+                if (data.account_manager != null) {
+                    $('#manager option').each(function () {
+                        if ($(this).text().trim().toLowerCase() === data.account_manager.trim().toLowerCase()) {
+                            $(this).prop('selected', true);
+                            return false; // break the loop
+                        }
+                    });
+                    $('#manager').trigger('change');
+                }
+                
                 // Radio Buttons for Gender
                 //$('input[name="gender"][value="' + data.gender.toLowerCase() + '"]').prop('checked', true);
                 $('.edit-to-dis').prop('disabled', true);

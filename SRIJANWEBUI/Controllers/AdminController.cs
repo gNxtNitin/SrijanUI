@@ -13,7 +13,7 @@ using UserManagementService.Repository;
 
 namespace SRIJANWEBUI.Controllers
 {
-    [Authorize(Roles ="ADMIN")]
+    [Authorize(Roles = "ADMIN")]
     public class AdminController : Controller
     {
         private readonly IAdminPortalRepository _adminPortalRepository;
@@ -124,7 +124,7 @@ namespace SRIJANWEBUI.Controllers
                 {
                     return res.Code != -5 ? new JsonResult(new { code = -1, message = "Something Went Wrong" }) : new JsonResult(new { code = -5, message = "Zone can't be deleted as It is assigned to a user." });
                 }
-                    
+
             }
         }
         [HttpPost("AddUpdateDeleteSchool")]
@@ -153,22 +153,22 @@ namespace SRIJANWEBUI.Controllers
             var res = await _adminPortalRepository.CreateUpdateDeleteSchool(schoolRequest);
             //if (res)
             //{
-                //if (sr1.flag == "C")
-                //{
-                //    TempData["CDCode"] = "1";
-                //    TempData["CDMessage"] = "School created successfully!";
-                //}
-                //else
-                //{
-                //    TempData["CDCode"] = "1";
-                //    TempData["CDMessage"] = "School deleted successfully!";
-                //}
+            //if (sr1.flag == "C")
+            //{
+            //    TempData["CDCode"] = "1";
+            //    TempData["CDMessage"] = "School created successfully!";
+            //}
+            //else
+            //{
+            //    TempData["CDCode"] = "1";
+            //    TempData["CDMessage"] = "School deleted successfully!";
+            //}
             //}
             if (sr1.flag == "C")
             {
                 return res ? new JsonResult(new { code = 1, message = "School created successfully." }) : new JsonResult(new { code = -1, message = "Failed to create school record." });
             }
-            else if(sr1.flag == "U")
+            else if (sr1.flag == "U")
             {
                 return res ? new JsonResult(new { code = 1, message = "School updated successfully." }) : new JsonResult(new { code = -1, message = "Failed to updated school record." });
             }
@@ -201,7 +201,7 @@ namespace SRIJANWEBUI.Controllers
                 EName = sr1.EName,
                 Email = sr1.Email,
                 EFName = sr1.EFName,
-                Password = string.IsNullOrEmpty( sr1.Password ) ?  sr1.Password : PasswordConfig.GetMd5Hash(sr1.Password),
+                Password = string.IsNullOrEmpty(sr1.Password) ? sr1.Password : PasswordConfig.GetMd5Hash(sr1.Password),
                 Designation = sr1.Designation,
                 Department = sr1.Department,
                 Gender = sr1.Gender,
@@ -210,7 +210,7 @@ namespace SRIJANWEBUI.Controllers
                 LogDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), // or any required format
                 AccountManager = sr1.AccountManager
             };
-            
+
             var res = await _adminPortalRepository.CreateUpdateDeleteEmployee(req);
             //var res = true;
             //if (res)
@@ -277,12 +277,12 @@ namespace SRIJANWEBUI.Controllers
                 Incharge = sr1.Incharge
             };
             var res = await _adminPortalRepository.AssignSchoolIncharge(schoolRequest);
-            
+
             return res ? new JsonResult(new { code = 1, message = "Incharge assigned successfully!" }) : new JsonResult(new { code = -1, message = "Failed." });
         }
         public async Task<JsonResult> GetData(string sr1, string? sr2)
         {
-            if(sr1 == "U" || sr1 == "E" || sr1 == "I")
+            if (sr1 == "U" || sr1 == "E" || sr1 == "I")
             {
                 sr2 = HttpContext.User.FindFirst("EmpId")?.Value;
                 var items = await _adminPortalRepository.GetData(sr1, sr2);
@@ -294,7 +294,7 @@ namespace SRIJANWEBUI.Controllers
                 return Json(items);
             }
             //string companycode = HttpContext.User.FindFirst("CompanyCode")?.Value;
-            else if(sr1 == "Z")
+            else if (sr1 == "Z")
             {
                 var items = await _adminPortalRepository.GetData(sr1, sr2);
                 List<ZoneRequestModel> list = JsonSerializer.Deserialize<List<ZoneRequestModel>>(items, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -305,10 +305,17 @@ namespace SRIJANWEBUI.Controllers
             {
                 return Json("items");
             }
-            
 
 
-            
+
+
+        }
+        public async Task<JsonResult> GetDashboardData()
+        {
+            var sr2 = HttpContext.User.FindFirst("EmpId")?.Value;
+            var items = await _adminPortalRepository.GetDashboarddata(sr2);
+
+            return Json(items);
         }
         public async Task<JsonResult> GetAllCity()
         {

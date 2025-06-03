@@ -438,9 +438,15 @@
                             notEmpty: {
                                 message: 'Password is required'
                             },
+                            
                             stringLength: {
-                                min: 6,
-                                message: 'Password must be at least 6 characters'
+                                min: 8,
+                                message: 'Password must be at least 8 characters'
+                            },
+
+                            regexp: {
+                                regexp: new RegExp("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$"),
+                                message: 'Password must contain letters, numbers, and at least one special character'
                             }
                         }
                     },

@@ -51,7 +51,7 @@ namespace UserManagementService.Repository
                     userId = doc.RootElement.GetProperty("userId").GetString();
                     empId = doc.RootElement.GetProperty("empId").GetString();
                     role = doc.RootElement.GetProperty("role").GetString();
-                    uname = doc.RootElement.GetProperty("name").GetString();
+                    uname = doc.RootElement.GetProperty("uName").GetString();
                 }
 
 

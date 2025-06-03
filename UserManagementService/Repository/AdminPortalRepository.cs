@@ -110,6 +110,29 @@ namespace UserManagementService.Repository
 
             return new List<EmployeeRequestModel>();
         }
+        public async Task<string> GetDashboarddata(string userId)
+        {
+            Dictionary<string, string> q = new Dictionary<string, string>();
+            q.Add("cid1", userId);
+           
+            try
+            {
+
+                APIResponse resp = await _apiClientHelper.GetAsync<APIResponse>("/api/Admin/GetDashboardCharts", q);
+
+                if (resp.Code > 1)
+                {
+                    //List<ZoneRequestModel> list = JsonSerializer.Deserialize<List<ZoneRequestModel>>(resp.Data.ToString(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                    return resp.Data.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return String.Empty;
+        }
         public async Task<string> GetData(string flag,string? cid2)
         {
             Dictionary<string, string> q = new Dictionary<string, string>();

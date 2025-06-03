@@ -24,10 +24,10 @@ namespace SRIJANWEBUI.Controllers
             _configuration = configuration;
         }
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View("Dashboard2");
-        //}
+        public async Task<IActionResult> Index()
+        {
+            return View("Dashboard2");
+        }
 
         public async Task<JsonResult> GetAllItems()
         {

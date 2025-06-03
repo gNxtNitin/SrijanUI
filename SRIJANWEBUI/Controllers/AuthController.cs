@@ -1,13 +1,15 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using SRIJANWEBUI.Models;
 using SRIJANWEBUI.Utility;
+using SRIJANWEBUI.Utility;
+using System.Reflection;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 using UserManagementService.DTOs.RequestModels;
 using UserManagementService.IRepository;
 using UserManagementService.Models;
 using UserManagementService.Utility;
-using SRIJANWEBUI.Utility;
 
 namespace SRIJANWEBUI.Controllers
 {
@@ -23,6 +25,14 @@ namespace SRIJANWEBUI.Controllers
             _memoryCacheService = memoryCacheService;
             _customerRepository = customerRepository;
         }
+        public bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            string pattern = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]).{8,}$";
+            return Regex.IsMatch(password, pattern);
+        }
         public async Task<IActionResult> LogIn()
         {
             if (User.Identity?.IsAuthenticated == true)
@@ -32,7 +42,7 @@ namespace SRIJANWEBUI.Controllers
                 if (role.Equals("CUSTOMER", StringComparison.OrdinalIgnoreCase))
                 {
 
-                    return RedirectToAction("Orders", "");
+                    return RedirectToAction("Orders", "Customer");
                 }
 
             }
@@ -392,6 +402,11 @@ namespace SRIJANWEBUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetUserPasswordData)
         {
+            if (!ModelState.IsValid)
+            {
+                // Validation failed – return view with errors
+                return View(resetUserPasswordData);
+            }
             resetUserPasswordData.UserId = EncDecHelper.Decrypt(resetUserPasswordData.UserId);
             bool isResetSuccess = await _accountRepository.ResetPassword(resetUserPasswordData.UserId, resetUserPasswordData.Password);
             if (isResetSuccess)
@@ -417,7 +432,15 @@ namespace SRIJANWEBUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePassword(string userId, string password)
         {
+            if (string.IsNullOrEmpty(password) || !IsValidPassword(password))
+            {
+                TempData["CPasswordCode"] = "0";
+                TempData["CPasswordMsg"] = "Invalid Password";
+                return RedirectToAction("ChangePassword");
+                //return new JsonResult(new { code = -1, message = "Invalid Password. Password must be at least 8 characters long and contain at least one letter, one number, and one special character." });
+            }
             bool res = await _accountRepository.UpdatePassword(userId, password);
+            
             if (res)
             {
                 TempData["CPasswordCode"] = "1";

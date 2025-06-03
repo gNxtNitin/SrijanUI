@@ -15,6 +15,7 @@ namespace UserManagementService.IRepository
         Task<APIResponse> CreateUpdateDeleteZone(ZoneRequestModel zrm);
         Task<APIResponse> CreateUpdateDeleteCity(CityRequestModel crm);
         Task<string> GetData(string flag, string? cid2);
+        Task<string> GetDashboarddata(string userId);
         Task<List<SchoolRequestModel>> GetAllSchool(string empid);
         Task<List<EmployeeRequestModel>> GetAllEmployees();
         Task<bool> CreateUpdateDeleteEmployee(EmployeeRequestModel erm);
