@@ -120,7 +120,7 @@ function daStatusChart(list1, list2) {
         series: list1,
         chart: {
             width: '100%',
-            height: 435,
+            height: 350,
             type: 'donut',
         },
         title: {

@@ -36,6 +36,9 @@ body {
     align-items: center;
     gap: 20px;
 }
+.contact span {
+    color:#000;
+}
 
 .top-login-btn {
     background-color: #a84343;
@@ -82,12 +85,19 @@ body {
         font-weight: 550;
         text-align: center;
         margin-bottom: 5px;
+        color:#000;
+        
     }
 
-    .login-box p {
-        margin-bottom: 20px;
-        color: #555;
+    .login-box label {
+        color: #3b3b3b;
     }
+
+
+.login-box p {
+    margin-bottom: 20px;
+    color: #555;
+}
 
     .login-box form {
         display: flex;
@@ -101,7 +111,12 @@ body {
         border: 1px solid #c84c4c;
         border-radius: 6px;
         outline: none;
+        color: black !important;
+        -webkit-text-fill-color: black;
     }
+select.form-select option {
+    background-color: #ffffff;
+}
 
 .input-group-text {
     border: 1px solid #c84c4c;
@@ -148,6 +163,10 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+.login-box button:hover {
+    background-color: #751f1f !important;
+}
+
 
 /* Footer */
 footer {

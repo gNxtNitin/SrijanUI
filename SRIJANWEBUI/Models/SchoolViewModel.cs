@@ -44,10 +44,10 @@ namespace SRIJANWEBUI.Models
         public string VendorType { get; set; }
 
         [JsonPropertyName("account_manager")]
-        public string? AccountManager { get; set; }
+        public string? AccountManager { get; set; } = string.Empty;
 
         [JsonPropertyName("incharge")]
-        [Required(ErrorMessage = "Incharge is required.")]
-        public string Incharge { get; set; }
+        //[Required(ErrorMessage = "Incharge is required.")]
+        public string? Incharge { get; set; }
     }
 }
