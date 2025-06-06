@@ -97,6 +97,15 @@
         </table>
     </div>
 </div>
+@*  <select class="form-select dt-polo" name="in" aria-label="Select Incharge" required>
+
+    <option value="">Select Incharge0</option>
+    <option value="dsff">Select Incharge1</option>
+     <option value="sfsd">Select Incharge2</option>
+    <option value="daad">Select Incharge3</option>
+    <option value="adad">Select Incharge4</option>
+
+</select>  *@
 <button type="button" class=" modal-weigh" style="display:none;" data-bs-toggle="modal" data-bs-target="#shareProject">
     Show
 </button>
@@ -203,6 +212,8 @@
 </script>
 <script>
     $(document).ready(function () {
+        // $('.dt-polo').select2();
+        
         document.getElementById('btn-submit').addEventListener('click', function () {
             //console.log(fv);
             var btn = $(this);

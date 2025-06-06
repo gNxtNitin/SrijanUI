@@ -193,6 +193,12 @@ namespace SRIJANWEBUI.Controllers
                     // TODO - Change token handling (do not store in the session)
                     //HttpContext.Session.SetString("user_token", loginStatus.Token);
                     //HttpContext.Session.SetInt32("userId", loginStatus.UserId);
+                    if(loginStatus.RespCode == 201)
+                    {
+                        return RedirectToAction("ChangePassword", "Auth");
+                    }
+
+
                     switch (role)
                     {
                         case "ADMIN":
