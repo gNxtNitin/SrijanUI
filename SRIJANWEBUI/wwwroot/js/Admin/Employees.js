@@ -41,7 +41,25 @@ $(document).ready(function () {
             { data: 'accountmanagerid', title: 'Account Manager ID' },
             { data: 'address', title: 'Address' },
             { data: 'account_manager', title: 'Account Manager' },
-            { data: 'logDate', title: 'Created Date' },
+            {
+                data: 'logDate',
+                title: 'Created Date',
+                render: function (data, type, row) {
+                    if (!data) return '';
+
+                    if (type === 'display' || type === 'filter') {
+                        const date = new Date(data);
+                        return date.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        }).replace(',', '');
+                    }
+
+                    // For sorting and type = 'sort' or 'type', return raw date string
+                    return data;
+                }
+            },
             { data: null, title: 'Actions' }
             
         ],
@@ -61,6 +79,20 @@ $(document).ready(function () {
             {
                 target: 3,
                 visible: false,
+            },
+            {
+                target: 6, 
+                render: function (data, type, full, meta) {
+                    var textLength =data != null ? (data.length > 14 ? data : '') : '';
+                    return (
+                        `<div class="truncate-text" title=${textLength}>` +
+                       
+                        (data != null ? data : '') +
+                        '</div>' +
+                        '</div>'
+                    );
+                }
+
             },
             {
                 target: 7,

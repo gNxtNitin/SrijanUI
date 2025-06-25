@@ -27,7 +27,25 @@ $(document).ready(function () {
             //{ data: null, title: 'S. No.' },
             { data: 'cname', title: 'City' },
             { data: 'sname', title: 'State' },
-            { data: 'logdate', title: 'Created Date' },
+            {
+                data: 'logdate',
+                title: 'Created Date',
+                render: function (data, type, row) {
+                    if (!data) return '';
+
+                    if (type === 'display' || type === 'filter') {
+                        const date = new Date(data);
+                        return date.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        }).replace(',', '');
+                    }
+
+                    // For sorting and type = 'sort' or 'type', return raw date string
+                    return data;
+                }
+            },
 
             { data: null, title: 'Actions' },
             //{ data: 'userType', title: 'userType' },
@@ -139,8 +157,8 @@ $(document).ready(function () {
             }
         ],
 
-
-        order: [[1, 'asc']], // Sort by User ID
+        //ordering: false,
+        order: [[1, 'asc'], [2, 'desc']], // Sort by User ID
         responsive: true,
         dom:
             '<"row"' +
@@ -180,6 +198,7 @@ $(document).ready(function () {
 
         ],
         initComplete: function (settings, json) {
+            $('.dataTables_filter input').attr('maxlength', 30);
             $('.add-new-city').on('click', function () {
                 offCanvasElement = document.querySelector('#add-new-record');
                 offCanvasEl = new bootstrap.Offcanvas(offCanvasElement);
@@ -194,6 +213,7 @@ $(document).ready(function () {
 
                 // Open offCanvas with form
                 offCanvasEl.show();
+                fv.resetForm(true);
             });
             deleteRecord();
             appendData();

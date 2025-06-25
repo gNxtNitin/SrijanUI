@@ -264,8 +264,9 @@ namespace UserManagementService.Repository
             }
             return false;
         }
-        public async Task<bool> CreateUpdateDeleteEmployee(EmployeeRequestModel erm)
+        public async Task<APIResponse> CreateUpdateDeleteEmployee(EmployeeRequestModel erm)
         {
+            APIResponse respBody = new APIResponse();
             try
             {
 
@@ -286,42 +287,38 @@ namespace UserManagementService.Repository
                     address = erm.Address,
                     manager = erm.AccountManager
                 };
-                APIResponse respBody = await _apiClientHelper.PostAsync<Object, APIResponse>("/api/Admin/CreateUpdateDeleteEmployee", anon);
+                respBody = await _apiClientHelper.PostAsync<Object, APIResponse>("/api/Admin/CreateUpdateDeleteEmployee", anon);
 
-                if (respBody.Code > 0)
-                {
-                    //var uniqueId = Guid.NewGuid().ToString();
-                    //_memoryCacheService.Set(uniqueId, userRequestModel.Email, TimeSpan.FromMinutes(10));
-
-                    return true;
-                }
+                //if (respBody.Code > 0)
+                //{
+                    
+                //    return true;
+                //}
             }
             catch (Exception ex)
             {
 
             }
-            return false;
+            return respBody;
         }
-        public async Task<bool> AssignSchoolIncharge(SchoolRequestModel srm)
+        public async Task<APIResponse> AssignSchoolIncharge(SchoolRequestModel srm)
         {
+            APIResponse respBody = new APIResponse();
             try
             {
 
-                APIResponse respBody = await _apiClientHelper.PostAsync<SchoolRequestModel, APIResponse>("/api/Admin/AssignSchoolIncharge", srm);
+                respBody = await _apiClientHelper.PostAsync<SchoolRequestModel, APIResponse>("/api/Admin/AssignSchoolIncharge", srm);
 
-                if (respBody.Code > 0)
-                {
-                    //var uniqueId = Guid.NewGuid().ToString();
-                    //_memoryCacheService.Set(uniqueId, userRequestModel.Email, TimeSpan.FromMinutes(10));
-
-                    return true;
-                }
+                //if (respBody.Code > 0)
+                //{
+                //    return true;
+                //}
             }
             catch (Exception ex)
             {
 
             }
-            return false;
+            return respBody;
         }
         public async Task<string> GetSchoolIncharge()
         {

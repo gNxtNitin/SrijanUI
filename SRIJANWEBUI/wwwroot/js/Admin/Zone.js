@@ -26,7 +26,25 @@ $(document).ready(function () {
             { data: 'zoneid', title: '' },
            // { data: null, title: 'S. No.' },
             { data: 'name', title: 'Zone' },
-            { data: 'logdate', title: 'Created Date' },
+            {
+                data: 'logdate',
+                title: 'Created Date',
+                render: function (data, type, row) {
+                    if (!data) return '';
+
+                    if (type === 'display' || type === 'filter') {
+                        const date = new Date(data);
+                        return date.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        }).replace(',', '');
+                    }
+
+                    // For sorting and type = 'sort' or 'type', return raw date string
+                    return data;
+                }
+            },
             
             { data: null, title: 'Actions' },
             //{ data: 'userType', title: 'userType' },

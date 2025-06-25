@@ -225,7 +225,7 @@ namespace SRIJANWEBUI.Controllers
                 else
                 {
                     
-                    ViewData["LoginErrorMessage"] = "Bad Credentials!";
+                    ViewData["LoginErrorMessage"] = "Invalid Employee ID or Password";
                     return View(userLogin);
                 }
             }

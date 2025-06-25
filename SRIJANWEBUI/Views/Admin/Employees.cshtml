@@ -109,7 +109,7 @@
                     <label for="empname" class="form-label required">Name:</label>
                 </div>
                 <div class=" ">
-                    <input type="text" class="form-control dt-empname edit-to-dis" id="empname" name="empname" placeholder="Employee Name" maxlength="100">
+                    <input type="text" class="form-control dt-empname edit-to-dis" id="empname" name="empname" placeholder="Employee Name" maxlength="20">
                 </div>
             </div>
             @* <div class="col-sm-12">
@@ -133,7 +133,7 @@
                     <label for="mobile" class="form-label">Mobile:</label>
                 </div>
                 <div class=" ">
-                    <input type="text" class="form-control dt-mobile edit-to-dis" id="mobile" name="mobile" placeholder="Mobile" maxlength="10">
+                    <input type="text" class="form-control dt-mobile edit-to-dis numeric-input" id="mobile" name="mobile" placeholder="Mobile" maxlength="10">
                 </div>
             </div>
             @* <div class="row">
@@ -232,7 +232,7 @@
                     <label for="manager" class="form-label required">Account Manager:</label>
                 </div>
                 <div class=" ">
-                    <select class="select2 form-select dt-manager" id="manager" name="manager" aria-label="Select Account Manager" data-allow-clear="true" required>
+                    <select class="select2 form-select dt-manager" id="manager" name="manager" aria-label="Select Account Manager" required>
 
                         <option value="">Select Account Manager</option>
 
@@ -383,9 +383,9 @@
                     email: {
                         validators: {
                             
-                            // emailAddress: {
-                            //     message: 'The input is not a valid email address'
-                            // },
+                            emailAddress: {
+                                message: 'Invalid email format.'
+                            },
                             stringLength: {
                                 max: 100,
                                 message: 'Email must be less than 100 characters'
@@ -397,8 +397,9 @@
                             
                             regexp: {
                                 regexp: /^[0-9]{10,15}$/,
-                                message: 'Enter a valid mobile number (10-15 digits)'
+                                message: 'Mobile number must be 10 digits.'
                             }
+                            
                         }
                     },
                     // gender: {
@@ -763,6 +764,8 @@
 </script>
 <script>
     var zone, role, manager;
+    var ReqUser = '@ViewBag.uidreq';
+    
     $(document).ready(function () {
 
         $.get("/Admin/GetData", { sr1: "E" }, function(response) {
@@ -799,13 +802,28 @@
             });
             // For STate select input
             manager.forEach(function (item) {
-                $('.dt-manager').append(`<option value="${item.EMPID}">${item.ENAME}</option>`);
+                //console.log(item.EMPID);
+                if(ReqUser != item.EMPID )
+                {
+                    $('.dt-manager').append(`<option value="${item.EMPID}">${item.ENAME}</option>`);
+                }
+                
             });
             
             $('.select2').select2({
       dropdownParent: $('#add-new-record') // very important
     });
 
+        });
+        $('.numeric-input').on('input', function () {
+
+            // Remove non-numeric characters
+            var value = $(this).val();
+            var numericValue = value.replace(/[^0-9]/g, '');
+            $(this).val(numericValue);
+        });
+        $('#manager').on('change', function () {
+            fv.revalidateField('manager');
         });
     })
 </script>
@@ -818,7 +836,7 @@
     //console.log(user_table.row(row).data());
         Swal.fire({
 
-            text: 'Are you sure you would like to delete this item?',
+            text: 'Are you sure you want to delete this Employee?',
 
             icon: 'warning',
 
@@ -889,9 +907,13 @@
             var btn = $(this);
             var row = $(this).closest('tr');
             var id1 = employee_table.row(row).data();
+            
             $('#flag1').val('P');
             $('#emp-flag').val(id1.id);
             $('.modal-weigh').trigger('click');
+            $('#new-password').val('');
+            $('#newcpassword').val('');
+            fv1.resetForm(true);
 
         });
     }

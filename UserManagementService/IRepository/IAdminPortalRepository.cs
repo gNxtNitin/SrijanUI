@@ -18,9 +18,9 @@ namespace UserManagementService.IRepository
         Task<string> GetDashboarddata(string userId);
         Task<List<SchoolRequestModel>> GetAllSchool(string empid);
         Task<List<EmployeeRequestModel>> GetAllEmployees();
-        Task<bool> CreateUpdateDeleteEmployee(EmployeeRequestModel erm);
+        Task<APIResponse> CreateUpdateDeleteEmployee(EmployeeRequestModel erm);
         Task<bool> CreateUpdateDeleteSchool(SchoolRequestModel srm);
-        Task<bool> AssignSchoolIncharge(SchoolRequestModel srm);
+        Task<APIResponse> AssignSchoolIncharge(SchoolRequestModel srm);
         Task<string> GetSchoolIncharge();
     }
 }

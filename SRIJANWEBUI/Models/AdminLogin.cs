@@ -4,10 +4,10 @@ namespace SRIJANWEBUI.Models
 {
     public class AdminLogin
     {
-        [Required(ErrorMessage = "Please Enter your Employee ID")]
+        [Required(ErrorMessage = "Employee ID required")]
         public string EmpId { get; set; }
 
-        [Required(ErrorMessage = "Please Enter your password")]
+        [Required(ErrorMessage = "Password required")]
         public string Password { get; set; }
         
         //public int? CompanyCode { get; set; } = 0;

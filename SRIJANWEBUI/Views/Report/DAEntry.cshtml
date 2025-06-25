@@ -1,10 +1,9 @@
-﻿@model UploadDAViewModel
-
+﻿
 @{
     Layout = "_DashboardLayout";
     ViewBag.Title = "DA Entry";
 }
-
+@model UploadDAViewModel
 @section PageStyles {
     <style>
         input:disabled {
@@ -137,6 +136,7 @@
             $('.numeric-input:not(:disabled)').val('');
 
             $(".btn-cancel").on("click", ()=>{
+                window.location.reload();
                   $('input:not(:disabled)').val('');
                   $('.bill-entry').remove();
             });
@@ -146,7 +146,7 @@
                 const billHtml = `
                   <div class="row bill-entry align-items-end mb-2">
                         <div class="col-md-4">
-                          <label class="form-label required">Bill File</label>
+                          <label class="form-label required">Bill File (Only image and PDF files are allowed.)</label>
                           <input type="file" class="form-control bill-file" name="Bills" accept="image/*,.pdf" required />
                           <div class="feedback-wrapper">
                             <small class="invalid-msg text-danger d-none">Only image and PDF files are allowed.</small>
@@ -156,7 +156,7 @@
                           <label class="form-label required">Description</label>
                           <input type="text" class="form-control bill-desc" name="Descriptions" placeholder="Remarks" required />
                           <div class="feedback-wrapper">
-                            <small class="invalid-msg text-danger d-none">&nbsp;</small>
+                            <small class="invalid-msg text-danger d-none">Description is required</small>
                           </div>
                         </div>
                     <div class="col-md-2 m-2">
@@ -197,7 +197,7 @@
                 e.preventDefault();
 
                 const $form = $("#uploadDAForm");
-                
+                var isValid = true;
 
                 const fromDateRaw = $('#FromDate').val();
                 const toDateRaw = $('#ToDate').val();
@@ -236,24 +236,34 @@
                 $("#billsContainer").find('.bill-entry').each(function () {
                     const fileInput = $(this).find('.bill-file');
                     const descInput = $(this).find('.bill-desc');
-                    
+                    const fileE = fileInput.closest('.col-md-4').find('.feedback-wrapper .invalid-msg');
+                    const descE = descInput.closest('.col-md-4').find('.feedback-wrapper .invalid-msg');
+
                     if (!fileInput.val()) {
                       fileInput.addClass('is-invalid');
+                      fileE.removeClass('d-none');
+                      
                       isValid = false;
-                      return;
+                     
                     } else {
                       fileInput.removeClass('is-invalid');
                     }
 
                     if (!descInput.val()) {
                       descInput.addClass('is-invalid');
+                      descE.removeClass('d-none');
                       isValid = false;
-                      return;
+                      
                     } else {
                       descInput.removeClass('is-invalid');
                     }
                 });
-
+                if(!isValid){
+                    
+                    return false;
+                }
+                
+               
                 $form.block({
                     message: '<div class="spinner-border text-primary" role="status"></div>',
                     css: {

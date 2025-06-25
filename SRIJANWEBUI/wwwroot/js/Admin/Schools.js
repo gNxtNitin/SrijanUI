@@ -32,12 +32,42 @@ $(document).ready(function () {
             { data: 'saddress', title: 'School Address' },
             { data: 'city', title: 'City' },
             { data: 'state', title: 'State' },
-            { data: 'empid', title: 'EMP ID' },
+            {
+                data: 'empid',
+                title: 'EMP ID',
+                render: function (data, type, full, meta) {
+                    //var textLength = data != null ? (data.length > 14 ? data : '') : '';
+                    return (
+                        `<div class="pe-2">` +
+                        data +
+                        '</div>' +
+                        '</div>'
+                    );
+                }
+            },
             //{ data: 'ename', title: 'EMP Name' },
             { data: 'school_category', title: 'School Category' },
             //{ data: 'account_manager', title: 'Account Manager' },
             //{ data: 'incharge', title: 'Incharge' },
-            { data: 'logdate', title: 'Created Date' },
+            {
+                data: 'logdate',
+                title: 'Created Date',
+                render: function (data, type, row) {
+                    if (!data) return '';
+
+                    if (type === 'display' || type === 'filter') {
+                        const date = new Date(data);
+                        return date.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        }).replace(',', '');
+                    }
+
+                    // For sorting and type = 'sort' or 'type', return raw date string
+                    return data;
+                }
+            },
 
             { data: null, title: 'Actions' }
             //{ data: 'userType', title: 'userType' },

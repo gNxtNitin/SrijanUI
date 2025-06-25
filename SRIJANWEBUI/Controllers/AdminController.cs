@@ -51,6 +51,7 @@ namespace SRIJANWEBUI.Controllers
         }
         public async Task<IActionResult> Employees()
         {
+            ViewBag.uidreq = HttpContext.User.FindFirst("UserId")?.Value;
             return View();
         }
         [HttpPost("AddUpdateDeleteCity")]
@@ -72,7 +73,19 @@ namespace SRIJANWEBUI.Controllers
             //}
             if (sr1.flag == "C")
             {
-                return res.Code > 0 ? new JsonResult(new { code = 1, message = "City created successfully." }) : new JsonResult(new { code = -1, message = "Failed to create city." });
+                if (res.Code > 0)
+                {
+                    return new JsonResult(new { code = 1, message = "City created successfully." });
+                }
+                else if (res.Code == -2)
+                {
+                    return new JsonResult(new { code = -2, message = "City already exists for this state." });
+                }
+                else
+                {
+                    return new JsonResult(new { code = -1, message = "Failed to create city." });
+                }
+                //return res.Code > 0 ? new JsonResult(new { code = 1, message = "City created successfully." }) : new JsonResult(new { code = -1, message = "Failed to create city." });
             }
             else
             {
@@ -112,7 +125,19 @@ namespace SRIJANWEBUI.Controllers
             //}
             if (sr1.flag == "C")
             {
-                return res.Code > 0 ? new JsonResult(new { code = 1, message = "Zone created successfully." }) : new JsonResult(new { code = -1, message = "Failed to create zone." });
+                if (res.Code > 0)
+                {
+                    return new JsonResult(new { code = 1, message = "Zone created successfully." });
+                }
+                else if (res.Code == -2)
+                {
+                    return new JsonResult(new { code = -2, message = "Zone already exists." });
+                }
+                else
+                {
+                    return new JsonResult(new { code = -1, message = "Failed to create zone." });
+                }
+                //return res.Code > 0 ? new JsonResult(new { code = 1, message = "Zone created successfully." }) : new JsonResult(new { code = -1, message = "Failed to create zone." });
             }
             else
             {
@@ -228,19 +253,31 @@ namespace SRIJANWEBUI.Controllers
             //}
             if (sr1.flag == "C")
             {
-                return res ? new JsonResult(new { code = 1, message = "Employee created successfully." }) : new JsonResult(new { code = -1, message = "Failed to add employee." });
+                if(res.Code > 0)
+                {
+                    return new JsonResult(new { code = 1, message = "Employee created successfully." });
+                }
+                else if(res.Code == -2)
+                {
+                    return new JsonResult(new { code = -2, message = "Employee ID already exists." });
+                }
+                else
+                {
+                    return new JsonResult(new { code = -1, message = "Failed to add employee." });
+                }
+                    //return res ? new JsonResult(new { code = 1, message = "Employee created successfully." }) : new JsonResult(new { code = -1, message = "Failed to add employee." });
             }
             else if (sr1.flag == "D")
             {
-                return res ? new JsonResult(new { code = 1, message = "Employee deleted successfully." }) : new JsonResult(new { code = -1, message = "Failed to delete employee." });
+                return res.Code > 0 ? new JsonResult(new { code = 1, message = "Employee deleted successfully." }) : new JsonResult(new { code = -1, message = "Failed to delete employee." });
             }
             else if (sr1.flag == "P")
             {
-                return res ? new JsonResult(new { code = 1, message = "Password Updated successfully." }) : new JsonResult(new { code = -1, message = "Failed to update password." });
+                return res.Code > 0 ? new JsonResult(new { code = 1, message = "Password Updated successfully." }) : new JsonResult(new { code = -1, message = "Failed to update password." });
             }
             else
             {
-                return res ? new JsonResult(new { code = 1, message = "Employee updated successfully." }) : new JsonResult(new { code = -1, message = "Failed to updated employee." });
+                return res.Code > 0 ? new JsonResult(new { code = 1, message = "Employee updated successfully." }) : new JsonResult(new { code = -1, message = "Failed to updated employee." });
             }
         }
         public async Task<JsonResult> GetSchoolIncharge()
@@ -277,8 +314,19 @@ namespace SRIJANWEBUI.Controllers
                 Incharge = sr1.Incharge
             };
             var res = await _adminPortalRepository.AssignSchoolIncharge(schoolRequest);
-
-            return res ? new JsonResult(new { code = 1, message = "Incharge assigned successfully!" }) : new JsonResult(new { code = -1, message = "Failed." });
+            if (res.Code > 0)
+            {
+                return new JsonResult(new { code = 1, message = "Incharge assigned successfully!" });
+            }
+            else if (res.Code == -2)
+            {
+                return new JsonResult(new { code = -2, message = "Incharge already assigned." });
+            }
+            else
+            {
+                return new JsonResult(new { code = -1, message = "Failed." });
+            }
+            //return res ? new JsonResult(new { code = 1, message = "Incharge assigned successfully!" }) : new JsonResult(new { code = -1, message = "Failed." });
         }
         public async Task<JsonResult> GetData(string sr1, string? sr2)
         {

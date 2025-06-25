@@ -23,19 +23,20 @@
             <h3>Mobile Admin Portal</h3>
             <p class="text-center">Please sign-in to your account</p>
     
-                    <form id="loginForm" class="mb-4" asp-asp-controller="Auth" asp-action="LoginAdmin" method="POST" asp-antiforgery="true">
+                    <form id="loginForm" class="mb-4" asp-controller="Auth" asp-action="LoginAdmin" method="POST" asp-antiforgery="true">
                             <div class="mb-0">
-                                <label for="EmpId" class="form-label">Customer ID</label>
+                                <label for="EmpId" class="form-label">Employee ID</label>
                             <input type="text" class="form-control" id="EmpId" name="EmpId" asp-for="EmpId" placeholder="Enter your Employee ID" autofocus>
                             <span asp-validation-for="EmpId" class="text-danger"></span>
                             </div>
                             <div class="mb-0 form-password-toggle">
                                 <label class="form-label" for="password">Password</label>
                                 <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                                    <input type="password" id="password" class="form-control" name="Password" asp-for="Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                                     <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
-                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                    
                                 </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
 
                             <div class="my-0">
